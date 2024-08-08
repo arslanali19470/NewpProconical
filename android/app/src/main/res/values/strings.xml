@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Proconical</string>
+    <string name="facebook_app_id">765837618960190</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">6693f28aea198935f25bd2e32b4304c7</string>
+</resources>

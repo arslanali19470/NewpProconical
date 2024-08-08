@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "716511376654",
+    "project_id": "proconical",
+    "storage_bucket": "proconical.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716511376654:android:b9e1a5fc9b1bcf3c7e535f",
+        "android_client_info": {
+          "package_name": "com.proconical"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "716511376654-b624vv2mte728johu9d4s9m7fqvpusjm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.proconical",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "716511376654-2f49cp4fcbhde7uvfv1kljpaipnfd1a8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe1vu6CQhuPBCM1q7CI0O7XWlSHEenPnA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716511376654-2f49cp4fcbhde7uvfv1kljpaipnfd1a8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
