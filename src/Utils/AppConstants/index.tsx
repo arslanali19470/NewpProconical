@@ -115,3 +115,21 @@ export {
   LinearGradient,
   Modal,
 };
+export const ProFeatcherList = [
+  {
+    id: 1,
+    TitleProfeatcher: 'Ultimates Dilemmas',
+  },
+  {
+    id: 2,
+    TitleProfeatcher: 'Unlimites Arguments',
+  },
+  {
+    id: 3,
+    TitleProfeatcher: 'Dark Mode UI theme',
+  },
+  {
+    id: 4,
+    TitleProfeatcher: 'Pro to access all featchers',
+  },
+];

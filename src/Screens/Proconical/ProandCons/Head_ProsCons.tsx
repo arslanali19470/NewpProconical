@@ -24,7 +24,10 @@ import {
   Modal,
   multiThemeColor,
 } from '../../../Utils/AppConstants';
-import {updateTrashStatus} from '../../../Utils/Firebase/Functions';
+import {
+  fetchTitleRealtime,
+  updateTrashStatus,
+} from '../../../Utils/Firebase/Functions';
 
 interface HeadProsConsProps {
   selectedItem: TopicDetail;
@@ -36,15 +39,15 @@ const Head_ProsCons: React.FC<HeadProsConsProps> = ({selectedItem}) => {
   const [isMoreVisible, setMoreVisible] = useState(false);
   const [isDeleteVisible, setDeleteVisible] = useState(false);
   const [topicName, setTopicName] = useState(selectedItem.title);
+  const [title, setTitle] = useState(selectedItem.title);
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (isFocused) {
-      // Update the topicName when the screen is focused
-      setTopicName(selectedItem.title);
-    }
-  }, [isFocused, selectedItem.title]);
+    const unsubscribe = fetchTitleRealtime(selectedItem.id, setTitle);
+
+    return () => unsubscribe(); // Cleanup subscription on unmount
+  }, []);
 
   const handleShare = async () => {
     setMoreVisible(false);
@@ -97,9 +100,7 @@ const Head_ProsCons: React.FC<HeadProsConsProps> = ({selectedItem}) => {
           </Row>
         </Row>
         <Space height={20} />
-        <Text style={{color: 'white', padding: 5, fontSize: 18}}>
-          {topicName}
-        </Text>
+        <Text style={{color: 'white', padding: 5, fontSize: 18}}>{title}</Text>
         <Space height={20} />
         <TouchableOpacity
           style={[

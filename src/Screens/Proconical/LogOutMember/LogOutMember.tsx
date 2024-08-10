@@ -80,8 +80,8 @@ const LogOutMember = () => {
       <Space height={15} />
       <Button
         title="Back to Home"
-        // onPress={() => navigation.navigate('Dilemmas')}
-        onPress={() => Alert.alert('Go to the main Page')}
+        onPress={() => navigation.navigate('Dilemmas')}
+        // onPress={() => Alert.alert('Go to the main Page')}
         backgroundColor={multiThemeColor().textcolor}
         TextColor={multiThemeColor().main_background}
       />

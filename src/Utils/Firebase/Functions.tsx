@@ -46,11 +46,52 @@ export const signInAnonymously = async (): Promise<string | null> => {
   }
 };
 
+// export const getGoalByUser = (
+//   userId: string,
+//   setGoals: (goals: Goal[]) => void,
+//   setLoading: (loading: boolean) => void,
+// ): (() => void) => {
+//   setLoading(true);
+//   const firestore = getFirestore();
+//   const docRef = collection(firestore, 'Goals');
+//   const q = query(
+//     docRef,
+//     where('userId', '==', userId),
+//     where('trash', '==', false),
+//   );
+
+//   const unsubscribe = onSnapshot(
+//     q,
+//     querySnapshot => {
+//       const goals: Goal[] = [];
+//       querySnapshot.forEach(doc => {
+//         goals.push(doc.data() as Goal);
+//       });
+
+//       setGoals(goals);
+//       setLoading(false);
+//     },
+//     error => {
+//       console.error('Error getting goal: ', error);
+//       setLoading(false);
+//     },
+//   );
+
+//   return unsubscribe;
+// };
+
 export const getGoalByUser = (
   userId: string,
   setGoals: (goals: Goal[]) => void,
   setLoading: (loading: boolean) => void,
 ): (() => void) => {
+  // Validate userId
+  if (!userId) {
+    console.error('Error: userId is undefined or null');
+    setLoading(false);
+    return () => {}; // Return an empty function if userId is invalid
+  }
+
   setLoading(true);
   const firestore = getFirestore();
   const docRef = collection(firestore, 'Goals');
@@ -67,6 +108,11 @@ export const getGoalByUser = (
       querySnapshot.forEach(doc => {
         goals.push(doc.data() as Goal);
       });
+
+      if (goals.length === 0) {
+        console.log('No goals found. Kindly add some goals.');
+        // Optionally, set a specific message or state in your UI to handle this case
+      }
 
       setGoals(goals);
       setLoading(false);
@@ -340,4 +386,97 @@ export const updateProsConsItem = async (
     console.error('Error updating item: ', error);
     Alert.alert('Error', 'Error updating item');
   }
+};
+
+// ===============================
+export const fetchProsRealtime = (
+  GoalId: string,
+  setPros: (pros: ProCon[]) => void,
+  setLoading: (loading: boolean) => void,
+): (() => void) => {
+  setLoading(true);
+  const firestore = getFirestore();
+  const docRef = collection(firestore, 'Goals');
+  const q = query(docRef, where('id', '==', GoalId)); // Changed 'userId' to 'id'
+
+  const unsubscribe = onSnapshot(
+    q,
+    querySnapshot => {
+      const pros: ProCon[] = [];
+      querySnapshot.forEach(doc => {
+        const data = doc.data() as Goal;
+        pros.push(...data.Arguments.Pros); // Map the items in Pros array
+      });
+
+      setPros(pros);
+      setLoading(false);
+    },
+    error => {
+      console.error('Error getting goal: ', error);
+      setLoading(false);
+    },
+  );
+
+  return unsubscribe;
+};
+
+export const fetchConsRealtime = (
+  GoalId: string,
+  setCons: (cons: ProCon[]) => void,
+  setLoading: (loading: boolean) => void,
+): (() => void) => {
+  setLoading(true);
+  const firestore = getFirestore();
+  const docRef = collection(firestore, 'Goals');
+  const q = query(docRef, where('id', '==', GoalId));
+
+  const unsubscribe = onSnapshot(
+    q,
+    querySnapshot => {
+      const cons: ProCon[] = [];
+      querySnapshot.forEach(doc => {
+        const data = doc.data() as Goal;
+        cons.push(...data.Arguments.Cons); // Map the items in Cons array
+      });
+
+      setCons(cons);
+      setLoading(false);
+    },
+    error => {
+      console.error('Error getting goal: ', error);
+      setLoading(false);
+    },
+  );
+
+  return unsubscribe;
+};
+export const fetchTitleRealtime = (
+  GoalId: string,
+  setTitle: (title: string) => void,
+  // setLoading: (loading: boolean) => void,
+): (() => void) => {
+  // setLoading(true);
+  const firestore = getFirestore();
+  const docRef = collection(firestore, 'Goals');
+  const q = query(docRef, where('id', '==', GoalId));
+
+  const unsubscribe = onSnapshot(
+    q,
+    querySnapshot => {
+      if (!querySnapshot.empty) {
+        const data = querySnapshot.docs[0].data(); // Assuming there's only one document per GoalId
+        setTitle(data.title); // Set the title
+      } else {
+        console.error('No matching documents.');
+        setTitle(''); // Reset title if no document found
+      }
+      // setLoading(false);
+    },
+    error => {
+      console.error('Error getting goal title: ', error);
+      // setLoading(false);
+    },
+  );
+
+  return unsubscribe;
 };

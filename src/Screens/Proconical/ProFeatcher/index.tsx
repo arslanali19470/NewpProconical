@@ -5,7 +5,11 @@ import {Row} from 'native-base';
 import Heading from '../../../Components/CustomComponents/Heading';
 import Space from '../../../Components/CustomComponents/Space';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
-import {MaterialIcons, multiThemeColor} from '../../../Utils/AppConstants';
+import {
+  MaterialIcons,
+  multiThemeColor,
+  ProFeatcherList,
+} from '../../../Utils/AppConstants';
 // import { GRAY } from '../../../styles/Colors';
 // import {ProFeatcherList} from '../../../utils/CommonManager';
 
@@ -38,7 +42,7 @@ const ProFeatcher: React.FC = () => {
       </View>
       <View>
         <Space height={30} />
-        {/* {ProFeatcherList.map((item, ind) => (
+        {ProFeatcherList.map((item, ind) => (
           <View key={ind}>
             <Row
               alignItems={'center'}
@@ -51,8 +55,7 @@ const ProFeatcher: React.FC = () => {
             </Row>
             <Space height={10} />
           </View>
-        ))} */}
-        <Text style={{color: 'red'}}>Show the list here </Text>
+        ))}
       </View>
     </View>
   );

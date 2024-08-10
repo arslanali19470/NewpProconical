@@ -4,15 +4,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import {Row} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../../../navigation/MainNavigation/MainNavigation';
 import {multiThemeColor} from '../../../Utils/AppConstants';
-import firestore from '@react-native-firebase/firestore';
 import {ProsConsType, TopicDetail} from '../../../Utils/TypeExport/TypeExport';
 import Heading from '../../../Components/CustomComponents/Heading';
+import {fetchProsRealtime} from '../../../Utils/Firebase/Functions';
 
 interface ProsListProps {
   selectedItem: TopicDetail;
@@ -29,11 +30,15 @@ const ProsList: React.FC<ProsListProps> = ({
   selectedItem,
   setEmptyCheck,
   setProsList,
-  // setMainLoading,
 }) => {
   const navigation = useNavigation<ArgumentNavigationProp>();
-  const [internalProsList, setInternalProsList] = useState<ProsConsType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [pros, setPros] = useState<ProsConsType[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = fetchProsRealtime(selectedItem.id, setPros, setLoading);
+    return () => unsubscribe(); // Cleanup the subscription on unmount
+  }, [selectedItem.id]);
 
   const handleProsDetails = (item: ProsConsType) => {
     navigation.navigate('Argument', {
@@ -41,12 +46,18 @@ const ProsList: React.FC<ProsListProps> = ({
       mode: 'update',
     });
   };
-  const pros = selectedItem?.Arguments?.Pros || [];
+
+  useEffect(() => {
+    setProsList(pros);
+    setEmptyCheck(pros.length === 0);
+  }, [pros, setEmptyCheck, setProsList]);
 
   return (
-    <>
-      <View>
-        {pros.map((item, ind) => (
+    <ScrollView>
+      {loading ? (
+        <ActivityIndicator size="large" color={multiThemeColor().CONS_COLOR} />
+      ) : (
+        pros.map((item, ind) => (
           <TouchableOpacity onPress={() => handleProsDetails(item)} key={ind}>
             <Row
               justifyItems="center"
@@ -58,24 +69,22 @@ const ProsList: React.FC<ProsListProps> = ({
                   styles.circle,
                   {backgroundColor: multiThemeColor().CONS_COLOR},
                 ]}>
-                <Heading text={item.importance} color="white" fontSize={15} />
+                <Heading
+                  text={item.importance.toString()}
+                  color="white"
+                  fontSize={15}
+                />
               </View>
               <Heading text={item.description} fontSize={14} />
             </Row>
           </TouchableOpacity>
-        ))}
-      </View>
-    </>
+        ))
+      )}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // width: '65%',
-    // padding: 5,
-    // borderRadius: 5,
-    // backgroundColor: 'red',
-  },
   row: {
     borderWidth: 1,
     borderColor: 'lightgray',

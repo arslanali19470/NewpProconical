@@ -214,7 +214,7 @@ export const GuestLogin = (navigation: NavigationProp<RootStackParamList>) => {
       // if (userId) {
       //   dispatch(setUserID(userId));
       // }
-      navigation.navigate('DrawerNavigation');
+      navigation.navigate('DrawerNavigation', {UserID: userId});
       // Alert.alert('Good');
     })
     .catch(error => {

@@ -56,6 +56,12 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
   const blueTranslateX = useSharedValue(0);
   const blueTranslateY = useSharedValue(0);
   const offset = 235; // Distance between the boxes initially
+  //   useEffect(() => {
+  //   const {selectedItem} = route.params;
+  //   // Add any other logic that should be executed when selectedItem is updated
+  // }, [route.params]);
+
+  useEffect(() => {}, []);
 
   const panRed = Gesture.Pan()
     .onUpdate(e => {
@@ -117,8 +123,8 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
       <Head_ProsCons selectedItem={selectedItem} />
       {/* <Text style={{color: 'white'}}>{selectedItem?.id}</Text> */}
       <ProgressProsCons
-        prosLength={prosList.length}
-        consLength={consList.length}
+        // prosLength={prosList.length}
+        // consLength={consList.length}
         selectedItem={selectedItem}
       />
       <View style={{flex: 1, justifyContent: 'space-between'}}>

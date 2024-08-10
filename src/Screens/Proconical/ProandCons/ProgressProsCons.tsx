@@ -2,7 +2,11 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import * as Progress from 'react-native-progress';
 import {multiThemeColor} from '../../../Utils/AppConstants';
-import {TopicDetail} from '../../../Utils/TypeExport/TypeExport';
+import {TopicDetail, ProCon} from '../../../Utils/TypeExport/TypeExport';
+import {
+  fetchProsRealtime,
+  fetchConsRealtime,
+} from '../../../Utils/Firebase/Functions';
 
 type ProgressProsConsProps = {
   selectedItem: TopicDetail;
@@ -13,19 +17,37 @@ const ProgressProsCons: React.FC<ProgressProsConsProps> = ({selectedItem}) => {
   const [consSum, setConsSum] = useState(0);
 
   useEffect(() => {
-    const cons = selectedItem?.Arguments?.Cons || [];
-    const pros = selectedItem?.Arguments?.Pros || [];
+    const unsubscribePros = fetchProsRealtime(
+      selectedItem.id,
+      (pros: ProCon[]) => {
+        const sumImportance = (items: ProCon[]) =>
+          items.reduce((sum, item) => sum + item.importance, 0);
+        const prosSum = sumImportance(pros);
+        setProsSum(prosSum);
+        // console.log('Fetched Pros:', pros);
+        // console.log('Sum of Pros Importance:', prosSum);
+      },
+      () => {},
+    );
 
-    // Sum importance values
-    const sumImportance = (items: {importance: number}[]) =>
-      items.reduce((sum, item) => sum + item.importance, 0);
+    const unsubscribeCons = fetchConsRealtime(
+      selectedItem.id,
+      (cons: ProCon[]) => {
+        const sumImportance = (items: ProCon[]) =>
+          items.reduce((sum, item) => sum + item.importance, 0);
+        const consSum = sumImportance(cons);
+        setConsSum(consSum);
+        console.log('Fetched Cons:', cons);
+        console.log('Sum of Cons Importance:', consSum);
+      },
+      () => {},
+    );
 
-    setProsSum(sumImportance(pros));
-    setConsSum(sumImportance(cons));
-
-    // console.log('Sum of Pros Importance:', prosSum);
-    // console.log('Sum of Cons Importance:', consSum);
-  }, [selectedItem]);
+    return () => {
+      unsubscribePros();
+      unsubscribeCons();
+    };
+  }, [selectedItem.id]);
 
   const total = prosSum + consSum;
   const progress = total === 0 ? 0.5 : prosSum / total;

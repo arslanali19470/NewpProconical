@@ -1,13 +1,19 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
-import Heading from '../../../Components/CustomComponents/Heading';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+  ScrollView,
+} from 'react-native';
 import {Row} from 'native-base';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../../../Navigation/MainNavigation/MainNavigation';
-
-import {ProsConsType, TopicDetail} from '../../../Utils/TypeExport/TypeExport';
+import {RootStackParamList} from '../../../navigation/MainNavigation/MainNavigation';
 import {multiThemeColor} from '../../../Utils/AppConstants';
+import {ProsConsType, TopicDetail} from '../../../Utils/TypeExport/TypeExport';
+import Heading from '../../../Components/CustomComponents/Heading';
+import {fetchConsRealtime} from '../../../Utils/Firebase/Functions';
 
 interface ConsListProps {
   selectedItem: TopicDetail;
@@ -20,12 +26,19 @@ type ArgumentNavigationProp = StackNavigationProp<
   'Argument'
 >;
 
-const ConsList: React.FC<ConsListProps> = ({selectedItem}) => {
+const ConsList: React.FC<ConsListProps> = ({
+  selectedItem,
+  setEmptyCheck1,
+  setConsList,
+}) => {
   const navigation = useNavigation<ArgumentNavigationProp>();
-  // useEffect(() => {
-  //   console.log(selectedItem);
-  //   console.log(cons);
-  // }, []);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [cons, setCons] = useState<ProsConsType[]>([]);
+
+  useEffect(() => {
+    const unsubscribe = fetchConsRealtime(selectedItem.id, setCons, setLoading);
+    return () => unsubscribe(); // Cleanup the subscription on unmount
+  }, [selectedItem.id]);
 
   const handleConsDetails = (item: ProsConsType) => {
     navigation.navigate('Argument', {
@@ -33,11 +46,18 @@ const ConsList: React.FC<ConsListProps> = ({selectedItem}) => {
       mode: 'update',
     });
   };
-  const cons = selectedItem?.Arguments?.Cons || [];
+
+  useEffect(() => {
+    setConsList(cons);
+    setEmptyCheck1(cons.length === 0);
+  }, [cons, setEmptyCheck1, setConsList]);
+
   return (
-    <>
-      <View>
-        {cons.map((item, ind) => (
+    <ScrollView>
+      {loading ? (
+        <ActivityIndicator size="large" color={multiThemeColor().PROS_COLOR} />
+      ) : (
+        cons.map((item, ind) => (
           <TouchableOpacity onPress={() => handleConsDetails(item)} key={ind}>
             <Row
               justifyItems="center"
@@ -49,23 +69,22 @@ const ConsList: React.FC<ConsListProps> = ({selectedItem}) => {
                   styles.circle,
                   {backgroundColor: multiThemeColor().PROS_COLOR},
                 ]}>
-                <Heading text={item.importance} color="white" fontSize={15} />
+                <Heading
+                  text={item.importance.toString()}
+                  color="white"
+                  fontSize={15}
+                />
               </View>
               <Heading text={item.description} fontSize={14} />
             </Row>
           </TouchableOpacity>
-        ))}
-      </View>
-    </>
+        ))
+      )}
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  // container: {
-  //   flex: 1,
-  //   padding: 10,
-  //   backgroundColor: 'white',
-  // },
   row: {
     borderWidth: 1,
     borderColor: 'lightgray',
