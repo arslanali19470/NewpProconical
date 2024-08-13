@@ -21,6 +21,7 @@ interface FormattedListProps {
   resetSelection: boolean;
   setResetSelection: (reset: boolean) => void;
   LeftSwipShow: boolean;
+  // setfullLoading: (loading: boolean) => void;
 }
 
 const FormattedList: React.FC<FormattedListProps> = ({
@@ -30,6 +31,8 @@ const FormattedList: React.FC<FormattedListProps> = ({
   resetSelection,
   setResetSelection,
   LeftSwipShow,
+
+  setfullLoading,
 }) => {
   const navigation = useNavigation<FormattedListNavigationProp>();
 
@@ -148,6 +151,7 @@ const FormattedList: React.FC<FormattedListProps> = ({
           swipeableRefs={swipeableRefs}
           selectedItems={selectedItems}
           LeftSwipShow={LeftSwipShow}
+          setfullLoading={setfullLoading}
         />
       ))}
     </ScrollView>

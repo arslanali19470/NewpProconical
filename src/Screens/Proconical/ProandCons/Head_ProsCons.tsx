@@ -33,7 +33,10 @@ interface HeadProsConsProps {
   selectedItem: TopicDetail;
 }
 
-const Head_ProsCons: React.FC<HeadProsConsProps> = ({selectedItem}) => {
+const Head_ProsCons: React.FC<HeadProsConsProps> = ({
+  selectedItem,
+  setfullLoading,
+}) => {
   const navigation = useNavigation<NavigationProp<any>>();
   const [isModalVisible, setModalVisible] = useState(false);
   const [isMoreVisible, setMoreVisible] = useState(false);
@@ -134,7 +137,7 @@ const Head_ProsCons: React.FC<HeadProsConsProps> = ({selectedItem}) => {
           <Space height={20} />
           <TouchableOpacity
             onPress={() => {
-              updateTrashStatus(selectedItem.id, true);
+              updateTrashStatus(selectedItem.id, true, setfullLoading);
               navigation.navigate('DrawerNavigation', {
                 UserId: selectedItem.userId,
               });

@@ -245,7 +245,12 @@ export const createOrUpdateGoal = async (
 //   }
 // };
 
-export const updateTrashStatus = async (id: string, newStatus: boolean) => {
+export const updateTrashStatus = async (
+  id: string,
+  newStatus: boolean,
+  setfullLoading: React.Dispatch<React.SetStateAction<boolean>>,
+) => {
+  setfullLoading(true);
   try {
     const firestore = getFirestore();
     const docRef = collection(firestore, 'Goals');
@@ -254,6 +259,7 @@ export const updateTrashStatus = async (id: string, newStatus: boolean) => {
 
     if (querySnapshot.empty) {
       console.error('No matching documents.');
+      setfullLoading(false);
       return;
     }
 
@@ -270,6 +276,8 @@ export const updateTrashStatus = async (id: string, newStatus: boolean) => {
     });
   } catch (error) {
     console.error('Error updating trash status: ', error);
+  } finally {
+    setfullLoading(false);
   }
 };
 

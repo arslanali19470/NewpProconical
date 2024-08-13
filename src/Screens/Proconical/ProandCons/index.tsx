@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Text,
+  ScrollView,
 } from 'react-native';
 import {Row} from 'native-base';
 // import {MaterialIcons, multiThemeColor} from '../../../utils/AppConstants';
@@ -22,6 +23,8 @@ import {RootStackParamList} from '../../../Navigation/MainNavigation/MainNavigat
 // import {ProsConsType, TopicDetail} from '../../../utils/TypeExport';
 import LottieView from 'lottie-react-native';
 import Animated, {
+  runOnJS,
+  useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
@@ -45,6 +48,7 @@ export type ProsConsScreenProps = {
 const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
   const {selectedItem} = route.params;
   const [emptyCheck, setEmptyCheck] = useState<boolean>(false);
+  const [fulloading, setfullLoading] = useState<boolean>(false);
   const [emptyCheck1, setEmptyCheck1] = useState<boolean>(false);
   const [prosList, setProsList] = useState<ProsConsType[]>([]);
   const [consList, setConsList] = useState<ProsConsType[]>([]);
@@ -52,34 +56,39 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
   const [SubTopicName, setSubTopicName] = useState<boolean>(true);
   const [AnimationLoad, setAnimationLoad] = useState<boolean>(true);
   const [Mainloading, setMainLoading] = useState<boolean>();
+  const subTopicSharedValue = useSharedValue(true);
   const redTranslateX = useSharedValue(0);
   const redTranslateY = useSharedValue(0);
   const blueTranslateX = useSharedValue(0);
   const blueTranslateY = useSharedValue(0);
-  const offset = 235; // Distance between the boxes initially
-  //   useEffect(() => {
-  //   const {selectedItem} = route.params;
-  //   // Add any other logic that should be executed when selectedItem is updated
-  // }, [route.params]);
+  const offset = 235;
 
   useEffect(() => {}, []);
+  useAnimatedReaction(
+    () => subTopicSharedValue.value,
+    result => {
+      runOnJS(setSubTopicName)(result);
+    },
+    [],
+  );
 
   const panRed = Gesture.Pan()
     .onUpdate(e => {
       redTranslateX.value = e.translationX;
       redTranslateY.value = e.translationY;
-      console.log('Red Box TranslateX:', redTranslateX.value);
     })
     .onEnd(() => {
       if (redTranslateX.value < 26) {
         redTranslateX.value = withSpring(0);
         redTranslateY.value = withSpring(0);
         blueTranslateX.value = withSpring(0);
+        subTopicSharedValue.value = !subTopicSharedValue.value;
       } else {
         redTranslateY.value = withSpring(0);
         const tempRedX = 0;
         redTranslateX.value = withSpring(blueTranslateX.value + offset);
         blueTranslateX.value = withSpring(tempRedX - offset);
+        subTopicSharedValue.value = !subTopicSharedValue.value; // Toggle the shared value
       }
     });
 
@@ -87,21 +96,19 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
     .onUpdate(e => {
       blueTranslateX.value = e.translationX;
       blueTranslateY.value = e.translationY;
-      console.log('Blue Box TranslateX:', blueTranslateX.value);
     })
     .onEnd(() => {
       if (blueTranslateX.value > -26) {
         blueTranslateX.value = withSpring(0);
         blueTranslateY.value = withSpring(0);
         redTranslateX.value = withSpring(0);
+        subTopicSharedValue.value = !subTopicSharedValue.value;
       } else {
         blueTranslateY.value = withSpring(0);
         const tempRedX = 0;
-        // redTranslateX.value = withSpring(blueTranslateX.value + offset);
-        console.log('Arslan', blueTranslateX.value);
-        console.log('Ali', offset);
         redTranslateX.value = withSpring(offset);
         blueTranslateX.value = withSpring(tempRedX - offset);
+        subTopicSharedValue.value = !subTopicSharedValue.value; // Toggle the shared value
       }
     });
 
@@ -142,93 +149,88 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: multiThemeColor().main_background}}>
-      <Head_ProsCons selectedItem={selectedItem} />
+      <Head_ProsCons
+        selectedItem={selectedItem}
+        setfullLoading={setfullLoading}
+      />
       {/* <Text style={{color: 'white'}}>{selectedItem?.id}</Text> */}
       <ProgressProsCons
         // prosLength={prosList.length}
         // consLength={consList.length}
         selectedItem={selectedItem}
       />
-      <View style={{flex: 1, justifyContent: 'space-between'}}>
-        <>
+      <Row alignItems={'center'} mt={3}>
+        <Heading
+          text={SubTopicName == true ? 'Pros' : 'Cons'}
+          style={{padding: 20}}
+        />
+        <TouchableOpacity
+          style={{
+            backgroundColor: multiThemeColor().textcolor,
+            width: 30,
+            height: 30,
+            borderRadius: 100,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={!swapDisabled ? swapBoxes : null}
+          disabled={swapDisabled}>
+          <MaterialIcons
+            name="autorenew"
+            color={multiThemeColor().main_background}
+            size={20}
+          />
+        </TouchableOpacity>
+      </Row>
+      <View style={{flex: 1}}>
+        <View>
           <View>
-            <Row alignItems={'center'} mt={3}>
-              <Heading
-                text={SubTopicName == true ? 'Pros' : 'Cons'}
-                style={{padding: 20}}
-              />
-              <TouchableOpacity
-                style={{
-                  backgroundColor: multiThemeColor().textcolor,
-                  width: 30,
-                  height: 30,
-                  borderRadius: 100,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-                onPress={!swapDisabled ? swapBoxes : null}
-                disabled={swapDisabled}>
-                <MaterialIcons
-                  name="autorenew"
-                  color={multiThemeColor().main_background}
-                  size={20}
-                />
-              </TouchableOpacity>
-            </Row>
+            <ScrollView style={{height: 300}}>
+              <Row style={styles.row}>
+                <GestureDetector gesture={panRed}>
+                  <Animated.View
+                    style={[
+                      {
+                        width: '65%',
+                        padding: 5,
+                        borderRadius: 5,
+                      },
+                      redStyle,
+                    ]}>
+                    <ProsList
+                      selectedItem={selectedItem}
+                      setEmptyCheck={setEmptyCheck}
+                      setProsList={setProsList}
+                      setMainLoading={setMainLoading}
+                    />
+                  </Animated.View>
+                </GestureDetector>
 
-            <Row style={styles.row}>
-              <GestureDetector gesture={panRed}>
-                <Animated.View
-                  style={[
-                    {
-                      width: '65%',
-                      padding: 5,
-                      borderRadius: 5,
-                    },
-                    redStyle,
-                  ]}>
-                  <ProsList
-                    selectedItem={selectedItem}
-                    setEmptyCheck={setEmptyCheck}
-                    setProsList={setProsList}
-                    setMainLoading={setMainLoading}
-                  />
-                </Animated.View>
-              </GestureDetector>
-
-              <GestureDetector gesture={panBlue}>
-                <Animated.View
-                  style={[
-                    {
-                      width: '65%',
-                      padding: 5,
-                      borderRadius: 5,
-                    },
-                    blueStyle,
-                  ]}>
-                  <ConsList
-                    selectedItem={selectedItem}
-                    setEmptyCheck1={setEmptyCheck1}
-                    setConsList={setConsList}
-                    // setLoading={setLoading}
-                  />
-                </Animated.View>
-              </GestureDetector>
-            </Row>
+                <GestureDetector gesture={panBlue}>
+                  <Animated.View
+                    style={[
+                      {
+                        width: '65%',
+                        padding: 5,
+                        borderRadius: 5,
+                      },
+                      blueStyle,
+                    ]}>
+                    <ConsList
+                      selectedItem={selectedItem}
+                      setEmptyCheck1={setEmptyCheck1}
+                      setConsList={setConsList}
+                      // setLoading={setLoading}
+                    />
+                  </Animated.View>
+                </GestureDetector>
+              </Row>
+            </ScrollView>
           </View>
-        </>
+        </View>
 
         <Space height={40} />
-        {/* <Gradiant_Button
-          title="ADD ARGUMENT"
-          onPress={() => navigation.navigate('Argument', {selectedItem})}
-          color="white"
-          alignSelf="flex-end"
-          marginRight={20}
-          marginBottom={20}
-          width="120%"
-          fontSize={13}
-        /> */}
+
         <Button
           title="Add Argument"
           onPress={() => navigation.navigate('Argument', {selectedItem})}
@@ -238,6 +240,11 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
           alignSelf="flex-end"
         />
       </View>
+      {fulloading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#fff" />
+        </View>
+      )}
     </View>
   );
 };
@@ -247,6 +254,16 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 5,
     gap: 4,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

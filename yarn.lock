@@ -10450,7 +10450,7 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     react-native: 0.74.1
-    react-native-fbsdk-next: ^13.0.0
+    react-native-fbsdk-next: 12.1.4
     react-native-gesture-handler: ^2.16.2
     react-native-linear-gradient: ^2.8.3
     react-native-modal: ^13.0.1
@@ -10691,16 +10691,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-fbsdk-next@npm:^13.0.0":
-  version: 13.0.0
-  resolution: "react-native-fbsdk-next@npm:13.0.0"
+"react-native-fbsdk-next@npm:12.1.4":
+  version: 12.1.4
+  resolution: "react-native-fbsdk-next@npm:12.1.4"
   peerDependencies:
     expo: ">=47.0.0"
     react-native: ">=0.63.3"
   peerDependenciesMeta:
     expo:
       optional: true
-  checksum: ba0cd96ad369b5607b27fad3cc49cdc58a3428a7c90343caac52af019fe43b8558b449edbb9a2dcf215d6280c985b7724e1a65ee5999f7532c97400124aebf3b
+  checksum: 39a3ad16efc77132fe65e955e67f16d61cdd93cc6c39ec53d3d32bf7ded8c9cf4e1a798333413e0b01e0cdb19af9fe41802539151a590c5c747032be23994acc
   languageName: node
   linkType: hard
 

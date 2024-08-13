@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Alert, Text} from 'react-native';
+import {View, StyleSheet, Alert, Text, ActivityIndicator} from 'react-native';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 // import {multiThemeColor} from '../utils/AppConstants';
 import Button from '../../../Components/CustomComponents/Button';
@@ -21,7 +21,12 @@ import {
 import {handleFacebookLogin} from '../../../Utils/Auth/FaceBookAuth';
 import {multiThemeColor} from '../../../Utils/AppConstants';
 import {onGoogleButtonPress} from '../../../Utils/Auth/GoogleSignMember';
-import {AccessToken, LoginButton, Profile} from 'react-native-fbsdk-next';
+import {
+  AccessToken,
+  LoginButton,
+  LoginManager,
+  Profile,
+} from 'react-native-fbsdk-next';
 // import {
 //   EmailIcon,
 //   FacebookIcon,
@@ -41,40 +46,133 @@ import {AccessToken, LoginButton, Profile} from 'react-native-fbsdk-next';
 
 const WelcomeScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [fulloading, setfullLoading] = useState<boolean>(false);
 
   // =========================================
-  // =========================================
   const handleLoginFinished = (error, result) => {
+    setfullLoading(true); // Show loading indicator
+
     if (error) {
       console.log('Login has error: ' + error);
+      setfullLoading(false); // Hide loading indicator on error
     } else if (result.isCancelled) {
       console.log('Login is cancelled.');
+      setfullLoading(false); // Hide loading indicator on cancellation
     } else {
       AccessToken.getCurrentAccessToken()
         .then(data => {
-          console.log(data.accessToken.toString());
+          if (data) {
+            const accessToken = data.accessToken.toString();
+            console.log('Access Token: ', accessToken);
 
-          // Retrieve profile information along with the access token
-          Profile.getCurrentProfile()
-            .then(currentProfile => {
-              if (currentProfile) {
-                console.log(
-                  'The current logged user is: ' +
-                    currentProfile.name +
-                    '. His profile id is: ' +
-                    currentProfile.userID,
-                );
-                // Alert.alert(currentProfile.name);
-                navigation.navigate('DrawerNavigation', {
-                  UserID: currentProfile.userID,
-                });
-              }
-            })
-            .catch(err => console.log('Error fetching profile: ', err));
+            // Sign in with Facebook credential in Firebase
+            const facebookCredential =
+              auth.FacebookAuthProvider.credential(accessToken);
+
+            // Sign-in the user with the Facebook credential
+            auth()
+              .signInWithCredential(facebookCredential)
+              .then(userCredential => {
+                // userCredential is now correctly defined here
+                console.log('User signed in with Firebase using Facebook!');
+
+                // Retrieve profile information
+                Profile.getCurrentProfile()
+                  .then(currentProfile => {
+                    if (currentProfile) {
+                      console.log(
+                        'The current logged user is: ' +
+                          currentProfile.name +
+                          '. His profile id is: ' +
+                          currentProfile.userID,
+                      );
+
+                      // Navigate to 'Dilemmas' on successful login
+                      navigation.navigate('Dilemmas', {
+                        UserID: userCredential.user.uid, // userCredential is accessible here
+                      });
+                    }
+                  })
+                  .catch(err => {
+                    console.log('Error fetching profile: ', err);
+                    setfullLoading(false); // Hide loading indicator on profile fetch error
+                  });
+              })
+              .catch(err => {
+                console.log('Firebase sign-in error: ', err);
+                setfullLoading(false); // Hide loading indicator on Firebase sign-in error
+              });
+          }
         })
-        .catch(err => console.log('Error fetching access token: ', err));
+        .catch(err => {
+          console.log('Error fetching access token: ', err);
+          setfullLoading(false); // Hide loading indicator on access token fetch error
+        });
     }
   };
+
+  // =========================================
+  // const handleLoginFinished = (error, result) => {
+  //   if (error) {
+  //     console.log('Login has error: ' + error);
+  //   } else if (result.isCancelled) {
+  //     console.log('Login is cancelled.');
+  //   } else {
+  //     AccessToken.getCurrentAccessToken()
+  //       .then(data => {
+  //         console.log(data.accessToken.toString());
+
+  //         // Retrieve profile information along with the access token
+  //         Profile.getCurrentProfile()
+  //           .then(currentProfile => {
+  //             if (currentProfile) {
+  //               console.log(
+  //                 'The current logged user is: ' +
+  //                   currentProfile.name +
+  //                   '. His profile id is: ' +
+  //                   currentProfile.userID,
+  //                 data,
+  //               );
+  //               // Alert.alert(currentProfile.name);
+  //               // navigation.navigate('DrawerNavigation', {
+  //               //   UserID: currentProfile.userID,
+  //               // });
+  //             }
+  //           })
+  //           .catch(err => console.log('Error fetching profile: ', err));
+  //       })
+  //       .catch(err => console.log('Error fetching access token: ', err));
+  //   }
+  // };
+
+  // =========================================
+  // =========================================
+  async function onFacebookButtonPress() {
+    // Attempt login with permissions
+    const result = await LoginManager.logInWithPermissions([
+      'public_profile',
+      'email',
+    ]);
+
+    if (result.isCancelled) {
+      throw 'User cancelled the login process';
+    }
+
+    // Once signed in, get the users AccessToken
+    const data = await AccessToken.getCurrentAccessToken();
+
+    if (!data) {
+      throw 'Something went wrong obtaining access token';
+    }
+
+    // Create a Firebase credential with the AccessToken
+    const facebookCredential = auth.FacebookAuthProvider.credential(
+      data.accessToken,
+    );
+
+    // Sign-in the user with the credential
+    return auth().signInWithCredential(facebookCredential);
+  }
 
   // =========================================
 
@@ -153,10 +251,8 @@ const WelcomeScreen: React.FC = () => {
         />
         <Space height={10} />
         <Button
-          title="FaceBook"
-          onPress={() => {
-            Alert.alert('Mistake in Code '); // Trigger the same Facebook login functionality
-          }}
+          title="FaceBook Not Working "
+          onPress={() => onFacebookButtonPress()}
           backgroundColor={multiThemeColor().ButtonBackGround}
           TextColor={multiThemeColor().main_background}
           leftIcon={<FacebookIcon color={multiThemeColor().main_background} />}
@@ -165,6 +261,7 @@ const WelcomeScreen: React.FC = () => {
         <View>
           <LoginButton
             onLoginFinished={handleLoginFinished}
+            // onPress={() => onFacebookButtonPress()}
             onLogoutFinished={() => console.log('Logout.')}
             style={{width: '100%', height: 35}}
           />
@@ -188,6 +285,11 @@ const WelcomeScreen: React.FC = () => {
         />
         <Space height={80} />
       </View>
+      {fulloading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#fff" />
+        </View>
+      )}
     </View>
   );
 };
@@ -220,6 +322,16 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'column',
     justifyContent: 'center',
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

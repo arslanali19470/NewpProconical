@@ -29,6 +29,7 @@ const Trash: React.FC = () => {
   const [trash, setTrash] = useState<TopicDetail[]>([]);
   const [goals, setGoals] = useState<TopicDetail[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [fulloading, setfullLoading] = useState<boolean>(false);
   const navigation = useNavigation();
 
   const route = useRoute<RouteProp<DrawerParamList, 'Trash'>>();
@@ -76,8 +77,14 @@ const Trash: React.FC = () => {
             setResetSelection={setResetSelection}
             // restoreItem={restoreItem}
             LeftSwipShow={true}
+            setfullLoading={setfullLoading}
           />
         </ScrollView>
+      )}
+      {fulloading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#fff" />
+        </View>
       )}
     </View>
   );
@@ -89,5 +96,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     // padding: 10,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

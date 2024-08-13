@@ -1,7 +1,14 @@
 // AddArgument.tsx
 
 import React, {useEffect, useMemo, useState} from 'react';
-import {Alert, StyleSheet, Text, TextInput, View} from 'react-native';
+import {
+  ActivityIndicator,
+  Alert,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import Slider from '@react-native-community/slider';
 import Space from '../../../Components/CustomComponents/Space';
 import CircularBorder from '../../../Components/CustomComponents/CircularBorder';
@@ -37,6 +44,7 @@ const AddArgument: React.FC<ArgumentScreenProps> = ({route}) => {
   const [sliderValue, setSliderValue] = useState<number>(0);
   const [selectedId, setSelectedId] = useState<string | undefined>();
   const [textInput, setTextInput] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
   const navigation = useNavigation<ArgumentNavigationProp>();
 
   const selectedItem: ProsConsType | undefined = route?.params?.selectedItem;
@@ -71,11 +79,46 @@ const AddArgument: React.FC<ArgumentScreenProps> = ({route}) => {
     setSelectedId(id);
   };
 
+  // const addProsConsList = async () => {
+  //   if (!textInput.trim() || !selectedId) {
+  //     Alert.alert('Error', 'Please fill all required fields');
+  //     return;
+  //   }
+
+  //   const newItem: ProsConsType = {
+  //     id: selectedItem?.id || '',
+  //     description: textInput.trim(),
+  //     importance: sliderValue,
+  //     subid: uuid.v4().toString(),
+  //     type: selectedId === '1' ? 'Pros' : 'Cons',
+  //   };
+
+  //   await addProsConsItem(selectedItem, selectedId, newItem, navigation);
+  // };
+
+  // const updateProsConsList = async () => {
+  //   if (!textInput.trim() || !selectedId) {
+  //     Alert.alert('Error', 'Please fill all required fields');
+  //     return;
+  //   }
+
+  //   const updatedItem: ProsConsType = {
+  //     ...selectedItem,
+  //     description: textInput.trim(),
+  //     importance: sliderValue,
+  //     subid: selectedItem?.subid || '',
+  //   };
+
+  //   await updateProsConsItem(selectedItem, selectedId, updatedItem, navigation);
+  // };
+
   const addProsConsList = async () => {
     if (!textInput.trim() || !selectedId) {
       Alert.alert('Error', 'Please fill all required fields');
       return;
     }
+
+    setLoading(true); // Start loading
 
     const newItem: ProsConsType = {
       id: selectedItem?.id || '',
@@ -85,7 +128,11 @@ const AddArgument: React.FC<ArgumentScreenProps> = ({route}) => {
       type: selectedId === '1' ? 'Pros' : 'Cons',
     };
 
-    await addProsConsItem(selectedItem, selectedId, newItem, navigation);
+    try {
+      await addProsConsItem(selectedItem, selectedId, newItem, navigation);
+    } finally {
+      setLoading(false); // Stop loading after the operation
+    }
   };
 
   const updateProsConsList = async () => {
@@ -94,6 +141,8 @@ const AddArgument: React.FC<ArgumentScreenProps> = ({route}) => {
       return;
     }
 
+    setLoading(true); // Start loading
+
     const updatedItem: ProsConsType = {
       ...selectedItem,
       description: textInput.trim(),
@@ -101,7 +150,16 @@ const AddArgument: React.FC<ArgumentScreenProps> = ({route}) => {
       subid: selectedItem?.subid || '',
     };
 
-    await updateProsConsItem(selectedItem, selectedId, updatedItem, navigation);
+    try {
+      await updateProsConsItem(
+        selectedItem,
+        selectedId,
+        updatedItem,
+        navigation,
+      );
+    } finally {
+      setLoading(false); // Stop loading after the operation
+    }
   };
 
   const BoderColor = multiThemeColor().textcolor;
@@ -217,6 +275,11 @@ const AddArgument: React.FC<ArgumentScreenProps> = ({route}) => {
           alignSelf="flex-end"
         />
       )}
+      {loading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#fff" />
+        </View>
+      )}
     </View>
   );
 };
@@ -237,6 +300,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 5,
     padding: 10,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

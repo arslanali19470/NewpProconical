@@ -71,7 +71,7 @@ const OTPScreen: React.FC = () => {
     try {
       await confirm.confirm(code);
       const UserId = auth().currentUser?.uid;
-      navigation.navigate('DrawerNavigation', {UserID: UserId});
+      navigation.navigate('Dilemmas', {UserID: UserId});
       Alert.alert('All is well');
     } catch (error) {
       console.error('Invalid code.', error);

@@ -17,8 +17,8 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = props => {
       <Picture
         localSource={NavImage2}
         height={normalized.wp('40%')}
-        width={normalized.wp('100%')}
-        resizeMode="repeat"
+        width={normalized.wp('85%')}
+        // resizeMode="repeat"
       />
       <DrawerItemList {...props} />
     </DrawerContentScrollView>

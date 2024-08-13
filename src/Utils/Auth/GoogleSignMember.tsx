@@ -61,7 +61,7 @@ export const onGoogleButtonPress = async (
     const userId = userCredential.user?.uid;
     console.log('User UID:', userId);
 
-    navigation.navigate('DrawerNavigation', {UserID: userId});
+    navigation.navigate('Dilemmas', {UserID: userId});
   } catch (error) {
     console.error('Error signing in with Google:', error);
 

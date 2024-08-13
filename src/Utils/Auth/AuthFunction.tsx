@@ -139,7 +139,7 @@ export const LoginMemberFunction = async ({
       const UserId = userCredential.user?.uid;
       console.log('User UID:', UserId);
       // dispatch(setUserID(UserId));
-      navigation.navigate('DrawerNavigation', {UserID: UserId});
+      navigation.navigate('Dilemmas', {UserID: UserId});
       // Alert.alert('Good');
     } else {
       await auth().signOut();
@@ -214,7 +214,7 @@ export const GuestLogin = (navigation: NavigationProp<RootStackParamList>) => {
       // if (userId) {
       //   dispatch(setUserID(userId));
       // }
-      navigation.navigate('DrawerNavigation', {UserID: userId});
+      navigation.navigate('Dilemmas', {UserID: userId});
       // Alert.alert('Good');
     })
     .catch(error => {

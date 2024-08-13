@@ -119,7 +119,10 @@ const LoginMember: React.FC = () => {
         <TouchableOpacity
           style={styles.registerLink}
           onPress={() => navigation.navigate('SignUpMember')}>
-          <Text style={styles.registerText}>Want to Register</Text>
+          <Text
+            style={[styles.registerText, {color: multiThemeColor().textcolor}]}>
+            Want to Register
+          </Text>
         </TouchableOpacity>
       </View>
       <View style={styles.buttonContainer}>
@@ -157,7 +160,6 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   registerText: {
-    color: 'white',
     margin: 10,
   },
   buttonContainer: {

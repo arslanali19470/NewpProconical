@@ -18,6 +18,7 @@ interface ListItemProps {
   swipeableRefs: React.MutableRefObject<{[key: string]: Swipeable | null}>;
   selectedItems: string[];
   LeftSwipShow: boolean;
+  // setLoading: (loading: boolean) => void;
 }
 
 const ListItem: React.FC<ListItemProps> = ({
@@ -29,6 +30,7 @@ const ListItem: React.FC<ListItemProps> = ({
   selectedItems,
   currentSwipeable,
   LeftSwipShow,
+  setfullLoading,
 }) => {
   const isSelected = selectedItems.includes(item.id);
   const IconColor = multiThemeColor().textcolor;
@@ -56,7 +58,7 @@ const ListItem: React.FC<ListItemProps> = ({
   const RightSwip = (itemId: string) => (
     <TouchableOpacity
       style={styles.swipeButton}
-      onPress={() => updateTrashStatus(item.id, true)}
+      onPress={() => updateTrashStatus(itemId, true, setfullLoading)}
       // onPress={() => console.log(item.id)}
     >
       <MaterialIcons name={'delete'} color={IconColor} size={32} />
@@ -67,7 +69,7 @@ const ListItem: React.FC<ListItemProps> = ({
     LeftSwipShow && (
       <TouchableOpacity
         style={styles.swipeButton}
-        onPress={() => updateTrashStatus(item.id, false)}>
+        onPress={() => updateTrashStatus(item.id, false, setfullLoading)}>
         <MaterialIcons name={'delete-forever'} color={IconColor} size={32} />
       </TouchableOpacity>
     );
