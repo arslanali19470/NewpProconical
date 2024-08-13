@@ -56,12 +56,12 @@ export const SignUpMemberFunction = async ({
     setPassword('');
     setFullName('');
 
-    const usersCollection = firestore().collection('Users');
-    const docRef = await usersCollection.add({
-      name: fullName,
-      email: email,
-    });
-    console.log('Document written with ID:', docRef.id);
+    // const usersCollection = firestore().collection('Users');
+    // const docRef = await usersCollection.add({
+    //   name: fullName,
+    //   email: email,
+    // });
+    // console.log('Document written with ID:', docRef.id);
 
     await user.sendEmailVerification();
 
@@ -139,8 +139,8 @@ export const LoginMemberFunction = async ({
       const UserId = userCredential.user?.uid;
       console.log('User UID:', UserId);
       // dispatch(setUserID(UserId));
-      // navigation.navigate('Dilemmas', {UserID: UserId});
-      Alert.alert('Good');
+      navigation.navigate('DrawerNavigation', {UserID: UserId});
+      // Alert.alert('Good');
     } else {
       await auth().signOut();
       // Alert.alert(

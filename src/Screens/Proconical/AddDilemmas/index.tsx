@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {View, TextInput, ToastAndroid} from 'react-native';
+import {View, TextInput, ToastAndroid, TouchableOpacity} from 'react-native';
 import {VStack} from 'native-base';
 import Gradiant_Button from '../../../Components/CustomComponents/Gradiant_Button';
 import {RouteProp, useIsFocused} from '@react-navigation/native';
@@ -10,6 +10,7 @@ import {multiThemeColor} from '../../../Utils/AppConstants';
 import Space from '../../../Components/CustomComponents/Space';
 import {createOrUpdateGoal} from '../../../Utils/Firebase/Functions';
 import uuid from 'react-native-uuid';
+import Button from '../../../Components/CustomComponents/Button';
 
 type AddDilemmasNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -48,8 +49,15 @@ const Add_Dilemmas: React.FC<AddDilemmasScreenProps> = ({
         throw new Error('User not authenticated');
       }
 
+      const cleanedInputValue = inputValue.trim().replace(/\s+/g, ' ');
+
+      if (!cleanedInputValue) {
+        ToastAndroid.show('Title cannot be empty', ToastAndroid.SHORT);
+        return;
+      }
+
       const newGoal = {
-        id: selectedItem?.id || uuid.v4(), // Use existing id if updating, otherwise generate a new one
+        id: selectedItem?.id || uuid.v4(),
         title: cleanedInputValue,
         userId: user.uid,
         trash: false,
@@ -65,7 +73,7 @@ const Add_Dilemmas: React.FC<AddDilemmasScreenProps> = ({
       if (typeof result === 'string') {
         console.log('Goal created or updated with ID:', result);
         ToastAndroid.showWithGravityAndOffset(
-          'Topic Added or updated successfully!',
+          'Topic added or updated successfully!',
           ToastAndroid.LONG,
           ToastAndroid.BOTTOM,
           25,
@@ -81,6 +89,7 @@ const Add_Dilemmas: React.FC<AddDilemmasScreenProps> = ({
     }
   };
 
+  // ===========================================
   const cleanedInputValue = inputValue.trim().replace(/\s+/g, ' ');
   useEffect(() => {
     if (AddInputRef.current) {
@@ -124,7 +133,7 @@ const Add_Dilemmas: React.FC<AddDilemmasScreenProps> = ({
         />
       </VStack>
 
-      <Gradiant_Button
+      {/* <Gradiant_Button
         title="Save"
         onPress={handleAddItem}
         color="white"
@@ -133,6 +142,14 @@ const Add_Dilemmas: React.FC<AddDilemmasScreenProps> = ({
         marginBottom={20}
         width="120%"
         fontSize={13}
+      /> */}
+      <Button
+        title="Save"
+        onPress={handleAddItem}
+        backgroundColor="#26c4f5"
+        style={{marginBottom: '10%', marginRight: 20}}
+        width={100}
+        alignSelf="flex-end"
       />
     </View>
   );

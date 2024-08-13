@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Alert} from 'react-native';
+import {View, StyleSheet, Alert, Text} from 'react-native';
 import {useNavigation, NavigationProp} from '@react-navigation/native';
 // import {multiThemeColor} from '../utils/AppConstants';
 import Button from '../../../Components/CustomComponents/Button';
@@ -21,6 +21,7 @@ import {
 import {handleFacebookLogin} from '../../../Utils/Auth/FaceBookAuth';
 import {multiThemeColor} from '../../../Utils/AppConstants';
 import {onGoogleButtonPress} from '../../../Utils/Auth/GoogleSignMember';
+import {AccessToken, LoginButton, Profile} from 'react-native-fbsdk-next';
 // import {
 //   EmailIcon,
 //   FacebookIcon,
@@ -33,12 +34,49 @@ import {onGoogleButtonPress} from '../../../Utils/Auth/GoogleSignMember';
 
 // GoogleSignin.configure({
 //   webClientId:
-//     '649989529887-5apadlquturhspfeqtq92v0481ha2p56.apps.googleusercontent.com',
+//     '716511376654-2f49cp4fcbhde7uvfv1kljpaipnfd1a8.apps.googleusercontent.com',
 //   offlineAccess: true,
+//   forceCodeForRefreshToken: true,
 // });
 
 const WelcomeScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  // =========================================
+  // =========================================
+  const handleLoginFinished = (error, result) => {
+    if (error) {
+      console.log('Login has error: ' + error);
+    } else if (result.isCancelled) {
+      console.log('Login is cancelled.');
+    } else {
+      AccessToken.getCurrentAccessToken()
+        .then(data => {
+          console.log(data.accessToken.toString());
+
+          // Retrieve profile information along with the access token
+          Profile.getCurrentProfile()
+            .then(currentProfile => {
+              if (currentProfile) {
+                console.log(
+                  'The current logged user is: ' +
+                    currentProfile.name +
+                    '. His profile id is: ' +
+                    currentProfile.userID,
+                );
+                // Alert.alert(currentProfile.name);
+                navigation.navigate('DrawerNavigation', {
+                  UserID: currentProfile.userID,
+                });
+              }
+            })
+            .catch(err => console.log('Error fetching profile: ', err));
+        })
+        .catch(err => console.log('Error fetching access token: ', err));
+    }
+  };
+
+  // =========================================
 
   // const handleLogin = () => {
   //   console.log('Solve me');
@@ -116,11 +154,22 @@ const WelcomeScreen: React.FC = () => {
         <Space height={10} />
         <Button
           title="FaceBook"
-          onPress={() => handleFacebookLogin(navigation)}
+          onPress={() => {
+            Alert.alert('Mistake in Code '); // Trigger the same Facebook login functionality
+          }}
           backgroundColor={multiThemeColor().ButtonBackGround}
           TextColor={multiThemeColor().main_background}
           leftIcon={<FacebookIcon color={multiThemeColor().main_background} />}
         />
+        <Space height={10} />
+        <View>
+          <LoginButton
+            onLoginFinished={handleLoginFinished}
+            onLogoutFinished={() => console.log('Logout.')}
+            style={{width: '100%', height: 35}}
+          />
+        </View>
+
         <Space height={10} />
         <Button
           title="Phone Number"

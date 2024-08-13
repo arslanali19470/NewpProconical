@@ -29,6 +29,7 @@ import Animated, {
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {ProsConsType} from '../../../Utils/TypeExport/TypeExport';
 import {MaterialIcons, multiThemeColor} from '../../../Utils/AppConstants';
+import Button from '../../../Components/CustomComponents/Button';
 
 type ProsConsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -67,20 +68,41 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
     .onUpdate(e => {
       redTranslateX.value = e.translationX;
       redTranslateY.value = e.translationY;
+      console.log('Red Box TranslateX:', redTranslateX.value);
     })
     .onEnd(() => {
-      redTranslateX.value = withSpring(0);
-      redTranslateY.value = withSpring(0);
+      if (redTranslateX.value < 26) {
+        redTranslateX.value = withSpring(0);
+        redTranslateY.value = withSpring(0);
+        blueTranslateX.value = withSpring(0);
+      } else {
+        redTranslateY.value = withSpring(0);
+        const tempRedX = 0;
+        redTranslateX.value = withSpring(blueTranslateX.value + offset);
+        blueTranslateX.value = withSpring(tempRedX - offset);
+      }
     });
 
   const panBlue = Gesture.Pan()
     .onUpdate(e => {
       blueTranslateX.value = e.translationX;
       blueTranslateY.value = e.translationY;
+      console.log('Blue Box TranslateX:', blueTranslateX.value);
     })
     .onEnd(() => {
-      blueTranslateX.value = withSpring(0);
-      blueTranslateY.value = withSpring(0);
+      if (blueTranslateX.value > -26) {
+        blueTranslateX.value = withSpring(0);
+        blueTranslateY.value = withSpring(0);
+        redTranslateX.value = withSpring(0);
+      } else {
+        blueTranslateY.value = withSpring(0);
+        const tempRedX = 0;
+        // redTranslateX.value = withSpring(blueTranslateX.value + offset);
+        console.log('Arslan', blueTranslateX.value);
+        console.log('Ali', offset);
+        redTranslateX.value = withSpring(offset);
+        blueTranslateX.value = withSpring(tempRedX - offset);
+      }
     });
 
   const redStyle = useAnimatedStyle(() => {
@@ -197,7 +219,7 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
         </>
 
         <Space height={40} />
-        <Gradiant_Button
+        {/* <Gradiant_Button
           title="ADD ARGUMENT"
           onPress={() => navigation.navigate('Argument', {selectedItem})}
           color="white"
@@ -206,6 +228,14 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
           marginBottom={20}
           width="120%"
           fontSize={13}
+        /> */}
+        <Button
+          title="Add Argument"
+          onPress={() => navigation.navigate('Argument', {selectedItem})}
+          backgroundColor="#26c4f5"
+          style={{marginBottom: '10%', marginRight: 20}}
+          width={120}
+          alignSelf="flex-end"
         />
       </View>
     </View>

@@ -24,7 +24,9 @@ export const handleFacebookLogin = (
                       currentProfile.userID,
                   );
                   //   Alert.alert(currentProfile.name);
-                  navigation.navigate('DrawerNavigation');
+                  navigation.navigate('DrawerNavigation', {
+                    UserID: currentProfile.userID,
+                  });
                 }
               })
               .catch(err => console.log('Error fetching profile: ', err));

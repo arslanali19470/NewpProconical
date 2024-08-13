@@ -19,6 +19,7 @@ import {
   addProsConsItem,
   updateProsConsItem,
 } from '../../../Utils/Firebase/Functions';
+import Button from '../../../Components/CustomComponents/Button';
 // import {addProsConsItem} from './firestoreOperations'; // Adjust the import path as needed
 
 type ArgumentNavigationProp = StackNavigationProp<
@@ -135,7 +136,7 @@ const AddArgument: React.FC<ArgumentScreenProps> = ({route}) => {
       }}>
       <View>
         <Space height={30} />
-        <Text style={{color: 'white'}}>{selectedItem?.id}</Text>
+        {/* <Text style={{color: 'white'}}>{selectedItem?.id}</Text> */}
         <TextInput
           multiline={true}
           numberOfLines={10}
@@ -178,26 +179,42 @@ const AddArgument: React.FC<ArgumentScreenProps> = ({route}) => {
         </View>
       </View>
       {isUpdateMode ? (
-        <GradientButton
-          title={'Update'}
-          color={'white'}
-          alignSelf="flex-end"
-          marginRight={20}
-          marginBottom={20}
-          width={'120%'}
-          fontSize={13}
+        // <GradientButton
+        //   title={'Update'}
+        //   color={'white'}
+        //   alignSelf="flex-end"
+        //   marginRight={20}
+        //   marginBottom={20}
+        //   width={'120%'}
+        //   fontSize={13}
+        //   onPress={updateProsConsList}
+        // />
+        <Button
+          title="Update"
           onPress={updateProsConsList}
+          backgroundColor="#26c4f5"
+          style={{marginBottom: '10%', marginRight: 20}}
+          width={100}
+          alignSelf="flex-end"
         />
       ) : (
-        <GradientButton
-          title={'SAVE'}
-          color={'white'}
-          alignSelf="flex-end"
-          marginRight={20}
-          marginBottom={20}
-          width={'120%'}
-          fontSize={13}
+        // <GradientButton
+        //   title={'SAVE'}
+        //   color={'white'}
+        //   alignSelf="flex-end"
+        //   marginRight={20}
+        //   marginBottom={20}
+        //   width={'120%'}
+        //   fontSize={13}
+        //   onPress={addProsConsList}
+        // />
+        <Button
+          title="SAVE"
           onPress={addProsConsList}
+          backgroundColor="#26c4f5"
+          style={{marginBottom: '10%', marginRight: 20}}
+          width={100}
+          alignSelf="flex-end"
         />
       )}
     </View>

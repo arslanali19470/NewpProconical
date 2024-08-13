@@ -91,7 +91,13 @@ const LoginMember: React.FC = () => {
           placeholder="Enter your Email here * "
           value={email}
           onChangeText={text => setEmail(text)}
-          style={[styles.textInput, {borderColor: multiThemeColor().textcolor}]}
+          style={[
+            styles.textInput,
+            {
+              borderColor: multiThemeColor().textcolor,
+              color: multiThemeColor().textcolor,
+            },
+          ]}
           placeholderTextColor={multiThemeColor().PlaceHolder}
           autoCapitalize="none"
           keyboardType="email-address"
@@ -100,7 +106,13 @@ const LoginMember: React.FC = () => {
           placeholder="Enter your Password here * "
           value={password}
           onChangeText={text => setPassword(text)}
-          style={[styles.textInput, {borderColor: multiThemeColor().textcolor}]}
+          style={[
+            styles.textInput,
+            {
+              borderColor: multiThemeColor().textcolor,
+              color: multiThemeColor().textcolor,
+            },
+          ]}
           placeholderTextColor={multiThemeColor().PlaceHolder}
           secureTextEntry={true}
         />

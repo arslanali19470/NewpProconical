@@ -1,10 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Box} from 'native-base';
-// import {useStackNavigator} from '../../../utils/HandleNavigation';
-// import {multiThemeColor, normalized} from '../../../utils/AppConstants';
-// import Picture from '../../../components/Picture/Picture';
-// import AnimatedContainer from '../../../utils/AnimationsContainer';
-// import {ProsConsImage} from '../../../assets';
+
 import auth from '@react-native-firebase/auth';
 import {useStackNavigator} from '../../Navigation/HandleNavigation/HandleNavigation';
 import {multiThemeColor, normalized} from '../../Utils/AppConstants';
@@ -15,17 +11,19 @@ import {ProsConsImage} from '../../Assets';
 const SplashScreen: React.FC = () => {
   const {replaceScreen} = useStackNavigator();
   const [initializing, setInitializing] = useState(true);
-  const [user, setUser] = useState<any | null>(null); // Type 'any' or adjust to your user type
+  const [user, setUser] = useState<any | null>(null);
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(userAuth => {
-      setUser(userAuth);
-      if (initializing) setInitializing(false);
-    });
+    // Set a timeout for 1.5 seconds before checking authentication state
+    const timeoutId = setTimeout(() => {
+      const currentUser = auth().currentUser;
+      setUser(currentUser);
+      setInitializing(false);
+    }, 1500);
 
-    // Clean up subscription on unmount
-    return subscriber;
-  }, [initializing]);
+    // Cleanup timeout if component is unmounted
+    return () => clearTimeout(timeoutId);
+  }, []);
 
   useEffect(() => {
     if (!initializing) {
@@ -40,7 +38,6 @@ const SplashScreen: React.FC = () => {
   }, [initializing, replaceScreen, user]);
 
   if (initializing) {
-    // You can show a loading indicator or splash screen while initializing
     return (
       <Box
         bg={multiThemeColor().main_background}
@@ -63,8 +60,7 @@ const SplashScreen: React.FC = () => {
     );
   }
 
-  // This return statement is only reached once initializing is false
-  return null; // Or you can return a loading indicator here as well
+  return null;
 };
 
 export default SplashScreen;

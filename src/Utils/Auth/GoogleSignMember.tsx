@@ -10,7 +10,7 @@ import {RootStackParamList} from '../../Navigation/MainNavigation/MainNavigation
 
 GoogleSignin.configure({
   webClientId:
-    '716511376654-2f49cp4fcbhde7uvfv1kljpaipnfd1a8.apps.googleusercontent.com',
+    '716511376654-92385vbjknggcu654t79jkprqtpii8qn.apps.googleusercontent.com',
   offlineAccess: true,
   forceCodeForRefreshToken: true,
 });
@@ -19,7 +19,36 @@ export const onGoogleButtonPress = async (
   navigation: NavigationProp<RootStackParamList>,
 ) => {
   // Alert.alert('Good');
-  // navigation.navigate('DrawerNavigation');
+  // navigation.navigate('DrawerNavigation', {UserID: '111'});
+  // try {
+  //   await GoogleSignin.hasPlayServices();
+  //   const userInfo = await GoogleSignin.signIn();
+  //   const googleCredential = auth.GoogleAuthProvider.credential(
+  //     userInfo.idToken,
+  //   );
+  //   const userCredential = await auth().signInWithCredential(googleCredential);
+  //   console.log('User signed in with Google!');
+  //   const UserId = userCredential.user?.uid;
+  //   console.log('User UID:', UserId);
+  //   navigation.navigate('DrawerNavigation', {UserID: UserId});
+  //   // Alert.alert('Go to Google Login File ?');
+  // } catch (error) {
+  //   console.error('Error signing in with Google: ', error);
+  //   if ((error as any).code === statusCodes.SIGN_IN_CANCELLED) {
+  //     Alert.alert('Cancelled', 'Sign in was cancelled');
+  //   } else if ((error as any).code === statusCodes.IN_PROGRESS) {
+  //     Alert.alert('In Progress', 'Sign in is in progress');
+  //   } else if (
+  //     (error as any).code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE
+  //   ) {
+  //     Alert.alert('Error', 'Play services not available or outdated');
+  //   } else {
+  //     Alert.alert(
+  //       'Login Error',
+  //       'An error occurred during Google sign-in. Please try again.',
+  //     );
+  //   }
+  // }
   try {
     await GoogleSignin.hasPlayServices();
     const userInfo = await GoogleSignin.signIn();
@@ -29,19 +58,18 @@ export const onGoogleButtonPress = async (
     const userCredential = await auth().signInWithCredential(googleCredential);
 
     console.log('User signed in with Google!');
-    const UserId = userCredential.user?.uid;
-    console.log('User UID:', UserId);
-    navigation.navigate('DrawerNavigation', {UserID: UserId});
-    // Alert.alert('Go to Google Login File ?');
+    const userId = userCredential.user?.uid;
+    console.log('User UID:', userId);
+
+    navigation.navigate('DrawerNavigation', {UserID: userId});
   } catch (error) {
-    console.error('Error signing in with Google: ', error);
-    if ((error as any).code === statusCodes.SIGN_IN_CANCELLED) {
+    console.error('Error signing in with Google:', error);
+
+    if (error.code === statusCodes.SIGN_IN_CANCELLED) {
       Alert.alert('Cancelled', 'Sign in was cancelled');
-    } else if ((error as any).code === statusCodes.IN_PROGRESS) {
+    } else if (error.code === statusCodes.IN_PROGRESS) {
       Alert.alert('In Progress', 'Sign in is in progress');
-    } else if (
-      (error as any).code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE
-    ) {
+    } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
       Alert.alert('Error', 'Play services not available or outdated');
     } else {
       Alert.alert(

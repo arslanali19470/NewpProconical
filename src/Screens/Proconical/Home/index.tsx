@@ -161,17 +161,24 @@ const Home_Dilemmas: React.FC<DrawerScreenProps> = ({navigation, route}) => {
         </ScrollView>
       )}
 
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={() => {
           navigation.navigate('Dilemmas Description', {UserID: UserID});
         }}>
-        <LinearGradient
+         <LinearGradient
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           colors={['#4976e8', '#26c4f5', '#4ce4fc']}
           style={styles.CircularButton}>
           <MaterialIcons name={'mode-edit'} color="white" size={32} />
-        </LinearGradient>
+        </LinearGradient> 
+      </TouchableOpacity> */}
+      <TouchableOpacity
+        style={styles.CircularButton}
+        onPress={() => {
+          navigation.navigate('Dilemmas Description', {UserID: UserID});
+        }}>
+        <MaterialIcons name={'mode-edit'} color="white" size={32} />
       </TouchableOpacity>
     </View>
   );
@@ -189,5 +196,6 @@ const styles = StyleSheet.create({
     right: 20,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#26c4f5',
   },
 });
