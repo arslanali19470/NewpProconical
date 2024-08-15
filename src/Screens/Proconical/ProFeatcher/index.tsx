@@ -10,6 +10,7 @@ import {
   multiThemeColor,
   ProFeatcherList,
 } from '../../../Utils/AppConstants';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 // import { GRAY } from '../../../styles/Colors';
 // import {ProFeatcherList} from '../../../utils/CommonManager';
 
@@ -18,6 +19,7 @@ const ProFeatcher: React.FC = () => {
 
   return (
     <View style={{backgroundColor: multiThemeColor().main_background, flex: 1}}>
+      <ConnectionStatusToast />
       <View style={{backgroundColor: multiThemeColor().GRAY, padding: 15}}>
         <View style={{justifyContent: 'center', alignItems: 'flex-end'}}>
           <TouchableOpacity

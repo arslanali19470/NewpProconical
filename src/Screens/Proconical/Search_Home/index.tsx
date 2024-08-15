@@ -24,6 +24,7 @@ import Space from '../../../Components/CustomComponents/Space';
 import Heading from '../../../Components/CustomComponents/Heading';
 import {TopicDetail} from '../../../Utils/TypeExport/TypeExport';
 import {MaterialIcons, multiThemeColor} from '../../../Utils/AppConstants';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 
 const SearchHome = () => {
   const navigation = useNavigation();
@@ -91,6 +92,7 @@ const SearchHome = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: multiThemeColor().main_background}}>
+      <ConnectionStatusToast />
       <Row
         style={{backgroundColor: multiThemeColor().GRAY, padding: 10}}
         justifyContent={'space-between'}

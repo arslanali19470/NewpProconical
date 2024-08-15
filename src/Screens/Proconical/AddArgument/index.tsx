@@ -27,6 +27,7 @@ import {
   updateProsConsItem,
 } from '../../../Utils/Firebase/Functions';
 import Button from '../../../Components/CustomComponents/Button';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 // import {addProsConsItem} from './firestoreOperations'; // Adjust the import path as needed
 
 type ArgumentNavigationProp = StackNavigationProp<
@@ -192,6 +193,7 @@ const AddArgument: React.FC<ArgumentScreenProps> = ({route}) => {
         justifyContent: 'space-between',
         backgroundColor: multiThemeColor().main_background,
       }}>
+      <ConnectionStatusToast />
       <View>
         <Space height={30} />
         {/* <Text style={{color: 'white'}}>{selectedItem?.id}</Text> */}

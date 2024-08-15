@@ -33,6 +33,7 @@ import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {ProsConsType} from '../../../Utils/TypeExport/TypeExport';
 import {MaterialIcons, multiThemeColor} from '../../../Utils/AppConstants';
 import Button from '../../../Components/CustomComponents/Button';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 
 type ProsConsNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -149,6 +150,7 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
 
   return (
     <View style={{flex: 1, backgroundColor: multiThemeColor().main_background}}>
+      <ConnectionStatusToast />
       <Head_ProsCons
         selectedItem={selectedItem}
         setfullLoading={setfullLoading}

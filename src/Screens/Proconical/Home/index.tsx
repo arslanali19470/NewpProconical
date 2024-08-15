@@ -7,6 +7,7 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  ToastAndroid,
 } from 'react-native';
 import Space from '../../../Components/CustomComponents/Space';
 import * as firebase from '@react-native-firebase/app';
@@ -16,6 +17,8 @@ import {DrawerParamList} from '../../../Navigation/Drawer_Navigation/DrawerNavig
 import {DrawerActions, RouteProp} from '@react-navigation/native';
 import {Row} from 'native-base';
 import Heading from '../../../Components/CustomComponents/Heading';
+// import NetInfo from '@react-native-community/netinfo';
+// import {useNetInfoInstance} from '@react-native-community/netinfo';
 // import {getGoalByUserRealtime} from '../../../Utils/Firebase/Functions';
 
 import {TopicDetail} from '../../../Utils/TypeExport/TypeExport';
@@ -30,6 +33,7 @@ import {
   getGoalByUser,
   updateTrashStatus,
 } from '../../../Utils/Firebase/Functions';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 
 type DrawerScreenNavigationProp = DrawerNavigationProp<
   DrawerParamList,
@@ -49,6 +53,7 @@ const Home_Dilemmas: React.FC<DrawerScreenProps> = ({navigation, route}) => {
   const [resetSelection, setResetSelection] = useState(false);
   const [selectedItemCount, setSelectedItemCount] = useState(0);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  // const [isConnected, setIsConnected] = useState<boolean | null>(null);
   const {UserID} = route.params;
 
   const deleteSelectedItems = async () => {
@@ -71,8 +76,37 @@ const Home_Dilemmas: React.FC<DrawerScreenProps> = ({navigation, route}) => {
     return () => unsubscribe();
   }, [UserID]);
 
+  // useEffect(() => {
+  //   const unsubscribeNetInfo = NetInfo.addEventListener(state => {
+  //     if (state.isConnected !== isConnected) {
+  //       setIsConnected(state.isConnected);
+
+  //       if (!state.isConnected) {
+  //         ToastAndroid.showWithGravityAndOffset(
+  //           'Kindly Check Your Internet Connection',
+  //           ToastAndroid.LONG,
+  //           ToastAndroid.BOTTOM,
+  //           0,
+  //           100,
+  //         );
+  //       } else if (state.isConnected) {
+  //         ToastAndroid.showWithGravityAndOffset(
+  //           'You are Connected',
+  //           ToastAndroid.LONG,
+  //           ToastAndroid.BOTTOM,
+  //           0,
+  //           100,
+  //         );
+  //       }
+  //     }
+  //   });
+
+  //   return () => unsubscribeNetInfo();
+  // }, [isConnected]);
+
   return (
     <View style={{flex: 1, backgroundColor: multiThemeColor().main_background}}>
+      <ConnectionStatusToast />
       {/* <Text style={{color: 'white'}}>{UserID}</Text> */}
       {selectedItemCount > 0 ? (
         <View

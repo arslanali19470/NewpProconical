@@ -17,6 +17,7 @@ import {RootStackParamList} from '../../../Navigation/MainNavigation/MainNavigat
 import SubHeading from '../../../Components/CustomComponents/SubHeading';
 import {SignUpMemberFunction} from '../../../Utils/Auth/AuthFunction';
 import {multiThemeColor} from '../../../Utils/AppConstants';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 
 const SignUpMember: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -70,6 +71,7 @@ const SignUpMember: React.FC = () => {
         backgroundColor: multiThemeColor().main_background,
       }}>
       <View style={{flex: 1}}>
+        <ConnectionStatusToast />
         <Space height={10} />
         <Heading text="Registration" style={{fontSize: 40, marginTop: 40}} />
         <Space height={30} />

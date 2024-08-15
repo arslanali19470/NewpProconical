@@ -11,6 +11,7 @@ import Button from '../../../Components/CustomComponents/Button';
 import {StackNavigationProp} from '@react-navigation/stack';
 import Heading from '../../../Components/CustomComponents/Heading';
 import {multiThemeColor} from '../../../Utils/AppConstants';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 
 type OTPScreenRouteProp = RouteProp<RootStackParamList, 'OTPScreen'>;
 
@@ -86,6 +87,7 @@ const OTPScreen: React.FC = () => {
         {backgroundColor: multiThemeColor().main_background},
       ]}>
       <View style={{flex: 1}}>
+        <ConnectionStatusToast />
         <Space height={20} />
         <Heading
           text="Enter Your Verification Code"

@@ -18,6 +18,7 @@ import Heading from '../../../Components/CustomComponents/Heading';
 import {RootStackParamList} from '../../../Navigation/MainNavigation/MainNavigation';
 import {LoginMemberFunction} from '../../../Utils/Auth/AuthFunction';
 import {multiThemeColor} from '../../../Utils/AppConstants';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 
 const LoginMember: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -51,6 +52,7 @@ const LoginMember: React.FC = () => {
         styles.container,
         {backgroundColor: multiThemeColor().main_background},
       ]}>
+      <ConnectionStatusToast />
       <View style={{flex: 1}}>
         <Space height={20} />
         <Heading

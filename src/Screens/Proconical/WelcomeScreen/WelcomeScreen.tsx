@@ -27,6 +27,7 @@ import {
   LoginManager,
   Profile,
 } from 'react-native-fbsdk-next';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 // import {
 //   EmailIcon,
 //   FacebookIcon,
@@ -195,6 +196,7 @@ const WelcomeScreen: React.FC = () => {
         {backgroundColor: multiThemeColor().main_background},
       ]}>
       <View style={{flex: 1}}>
+        <ConnectionStatusToast />
         <Space height={30} />
         <View
           style={{

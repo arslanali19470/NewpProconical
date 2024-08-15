@@ -13,6 +13,7 @@ import uuid from 'react-native-uuid';
 import Button from '../../../Components/CustomComponents/Button';
 import {StyleSheet} from 'react-native';
 import {ActivityIndicator} from 'react-native';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 
 type AddDilemmasNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -107,6 +108,7 @@ const Add_Dilemmas: React.FC<AddDilemmasScreenProps> = ({
     <>
       <View
         style={{flex: 1, backgroundColor: multiThemeColor().main_background}}>
+        <ConnectionStatusToast />
         <Space height={20} />
         <VStack justifyContent="space-between" style={{flex: 1}}>
           <TextInput

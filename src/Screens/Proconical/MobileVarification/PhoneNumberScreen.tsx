@@ -10,6 +10,7 @@ import {useNavigation, NavigationProp} from '@react-navigation/native';
 import PhoneInput from 'react-native-phone-number-input';
 import {RootStackParamList} from '../../../Navigation/MainNavigation/MainNavigation'; // Update the import path accordingly
 import {multiThemeColor} from '../../../Utils/AppConstants';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 
 const PhoneNumberScreen: React.FC = () => {
   const [value, setValue] = useState('');
@@ -48,6 +49,7 @@ const PhoneNumberScreen: React.FC = () => {
         {backgroundColor: multiThemeColor().main_background},
       ]}>
       <View style={{flex: 1}}>
+        <ConnectionStatusToast />
         <Space height={20} />
         <Heading
           text="Enter Your Phone Number Below"

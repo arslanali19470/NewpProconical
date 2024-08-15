@@ -16,6 +16,7 @@ import {
 import {RootStackParamList} from '../../../Navigation/MainNavigation/MainNavigation';
 import {multiThemeColor} from '../../../Utils/AppConstants';
 import {handleLogoutMember} from '../../../Utils/Auth/AuthFunction';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 
 // Define the type for the route parameters
 type LogOutMemberRouteParams = {
@@ -37,6 +38,7 @@ const LogOutMember = () => {
         backgroundColor: multiThemeColor().main_background,
         width: '100%',
       }}>
+      <ConnectionStatusToast />
       <Heading
         text="LogOut"
         style={{

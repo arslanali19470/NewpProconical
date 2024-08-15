@@ -6,6 +6,7 @@ import {ThemeContext} from '../../Utils/Theme/ThemeContext';
 import {Row} from 'native-base';
 import Heading from '../../Components/CustomComponents/Heading';
 import Space from '../../Components/CustomComponents/Space';
+import ConnectionStatusToast from '../../Components/CustomComponents/ConnectionStatusToast';
 // import {MaterialIcons, multiThemeColor} from '../../../utils/AppConstants';
 // import Heading from '../../../components/Headings/Heading';
 // import {Row} from 'native-base';
@@ -32,6 +33,7 @@ const Settings: React.FC = () => {
 
   return (
     <View style={{flex: 1, backgroundColor: multiThemeColor().main_background}}>
+      <ConnectionStatusToast />
       <View style={{backgroundColor: multiThemeColor().GRAY, padding: 15}}>
         <Row space={7} alignItems={'center'}>
           <TouchableOpacity

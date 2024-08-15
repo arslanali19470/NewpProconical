@@ -21,6 +21,7 @@ import {MaterialIcons, multiThemeColor} from '../../../Utils/AppConstants';
 import {getGoalByUser, getTrash} from '../../../Utils/Firebase/Functions';
 import FormattedList from '../../../Components/FormattedList';
 import Button from '../../../Components/CustomComponents/Button';
+import ConnectionStatusToast from '../../../Components/CustomComponents/ConnectionStatusToast';
 
 const Trash: React.FC = () => {
   const [selectedItemCount, setSelectedItemCount] = useState(0);
@@ -49,6 +50,7 @@ const Trash: React.FC = () => {
 
   return (
     <View style={{backgroundColor: multiThemeColor().main_background, flex: 1}}>
+      <ConnectionStatusToast />
       <View style={{backgroundColor: multiThemeColor().GRAY, padding: 15}}>
         <Row space={7} alignItems={'center'}>
           <TouchableOpacity
