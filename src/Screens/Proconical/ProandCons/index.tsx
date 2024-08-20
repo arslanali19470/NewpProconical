@@ -156,97 +156,99 @@ const ProandCons: React.FC<ProsConsScreenProps> = ({route, navigation}) => {
         setfullLoading={setfullLoading}
       />
       {/* <Text style={{color: 'white'}}>{selectedItem?.id}</Text> */}
-      <ProgressProsCons
-        // prosLength={prosList.length}
-        // consLength={consList.length}
-        selectedItem={selectedItem}
-      />
-      <Row alignItems={'center'} mt={3}>
-        <Heading
-          text={SubTopicName == true ? 'Pros' : 'Cons'}
-          style={{padding: 20}}
+      <ScrollView>
+        <ProgressProsCons
+          // prosLength={prosList.length}
+          // consLength={consList.length}
+          selectedItem={selectedItem}
         />
-        <TouchableOpacity
-          style={{
-            backgroundColor: multiThemeColor().textcolor,
-            width: 30,
-            height: 30,
-            borderRadius: 100,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-          onPress={!swapDisabled ? swapBoxes : null}
-          disabled={swapDisabled}>
-          <MaterialIcons
-            name="autorenew"
-            color={multiThemeColor().main_background}
-            size={20}
+        <Row alignItems={'center'} mt={3}>
+          <Heading
+            text={SubTopicName == true ? 'Pros' : 'Cons'}
+            style={{padding: 20}}
           />
-        </TouchableOpacity>
-      </Row>
-      <View style={{flex: 1}}>
-        <View>
+          <TouchableOpacity
+            style={{
+              backgroundColor: multiThemeColor().textcolor,
+              width: 30,
+              height: 30,
+              borderRadius: 100,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            onPress={!swapDisabled ? swapBoxes : null}
+            disabled={swapDisabled}>
+            <MaterialIcons
+              name="autorenew"
+              color={multiThemeColor().main_background}
+              size={20}
+            />
+          </TouchableOpacity>
+        </Row>
+        <View style={{flex: 1}}>
           <View>
-            <ScrollView style={{height: 300}}>
-              <Row style={styles.row}>
-                <GestureDetector gesture={panRed}>
-                  <Animated.View
-                    style={[
-                      {
-                        width: '65%',
-                        padding: 5,
-                        borderRadius: 5,
-                      },
-                      redStyle,
-                    ]}>
-                    <ProsList
-                      selectedItem={selectedItem}
-                      setEmptyCheck={setEmptyCheck}
-                      setProsList={setProsList}
-                      setMainLoading={setMainLoading}
-                    />
-                  </Animated.View>
-                </GestureDetector>
+            <View>
+              <ScrollView style={{height: 300}}>
+                <Row style={styles.row}>
+                  <GestureDetector gesture={panRed}>
+                    <Animated.View
+                      style={[
+                        {
+                          width: '65%',
+                          padding: 5,
+                          borderRadius: 5,
+                        },
+                        redStyle,
+                      ]}>
+                      <ProsList
+                        selectedItem={selectedItem}
+                        setEmptyCheck={setEmptyCheck}
+                        setProsList={setProsList}
+                        setMainLoading={setMainLoading}
+                      />
+                    </Animated.View>
+                  </GestureDetector>
 
-                <GestureDetector gesture={panBlue}>
-                  <Animated.View
-                    style={[
-                      {
-                        width: '65%',
-                        padding: 5,
-                        borderRadius: 5,
-                      },
-                      blueStyle,
-                    ]}>
-                    <ConsList
-                      selectedItem={selectedItem}
-                      setEmptyCheck1={setEmptyCheck1}
-                      setConsList={setConsList}
-                      // setLoading={setLoading}
-                    />
-                  </Animated.View>
-                </GestureDetector>
-              </Row>
-            </ScrollView>
+                  <GestureDetector gesture={panBlue}>
+                    <Animated.View
+                      style={[
+                        {
+                          width: '65%',
+                          padding: 5,
+                          borderRadius: 5,
+                        },
+                        blueStyle,
+                      ]}>
+                      <ConsList
+                        selectedItem={selectedItem}
+                        setEmptyCheck1={setEmptyCheck1}
+                        setConsList={setConsList}
+                        // setLoading={setLoading}
+                      />
+                    </Animated.View>
+                  </GestureDetector>
+                </Row>
+              </ScrollView>
+            </View>
           </View>
-        </View>
 
-        <Space height={40} />
+          <Space height={40} />
 
-        <Button
-          title="Add Argument"
-          onPress={() => navigation.navigate('Argument', {selectedItem})}
-          backgroundColor="#26c4f5"
-          style={{marginBottom: '10%', marginRight: 20}}
-          width={120}
-          alignSelf="flex-end"
-        />
-      </View>
-      {fulloading && (
-        <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="#fff" />
+          <Button
+            title="Add Argument"
+            onPress={() => navigation.navigate('Argument', {selectedItem})}
+            backgroundColor="#26c4f5"
+            style={{marginBottom: '10%', marginRight: 20}}
+            width={120}
+            alignSelf="flex-end"
+          />
         </View>
-      )}
+        {fulloading && (
+          <View style={styles.loadingOverlay}>
+            <ActivityIndicator size="large" color="#fff" />
+          </View>
+        )}
+      </ScrollView>
     </View>
   );
 };

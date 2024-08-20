@@ -120,7 +120,7 @@ const Head_ProsCons: React.FC<HeadProsConsProps> = ({
           />
         </TouchableOpacity>
       </View>
-      <Space height={60} />
+      {/* <Space height={60} /> */}
       <ModelHandler isModalVisible={isModalVisible} toggleModal={toggleModal} />
       <Modal
         isVisible={isMoreVisible}

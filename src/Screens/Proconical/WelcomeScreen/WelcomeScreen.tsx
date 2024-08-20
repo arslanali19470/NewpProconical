@@ -89,7 +89,7 @@ const WelcomeScreen: React.FC = () => {
                       );
 
                       // Navigate to 'Dilemmas' on successful login
-                      navigation.navigate('Dilemmas', {
+                      navigation.navigate('DrawerNavigation', {
                         UserID: userCredential.user.uid, // userCredential is accessible here
                       });
                     }

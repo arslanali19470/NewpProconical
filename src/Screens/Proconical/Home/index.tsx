@@ -59,7 +59,8 @@ const Home_Dilemmas: React.FC<DrawerScreenProps> = ({navigation, route}) => {
   const deleteSelectedItems = async () => {
     try {
       for (const itemId of selectedItems) {
-        await updateTrashStatus(itemId, true);
+        // await updateTrashStatus(itemId, true);
+        await updateTrashStatus(itemId, true, setfullLoading);
       }
 
       setSelectedItems([]);

@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import * as Progress from 'react-native-progress';
+import {View, Dimensions, StyleSheet, Text} from 'react-native';
+import {PieChart} from 'react-native-gifted-charts';
 import {multiThemeColor} from '../../../Utils/AppConstants';
-import {TopicDetail, ProCon} from '../../../Utils/TypeExport/TypeExport';
 import {
   fetchProsRealtime,
   fetchConsRealtime,
 } from '../../../Utils/Firebase/Functions';
+import {ProsConsType, TopicDetail} from '../../../Utils/TypeExport/TypeExport';
+import Space from '../../../Components/CustomComponents/Space';
+import {Row} from 'native-base';
 
 type ProgressProsConsProps = {
   selectedItem: TopicDetail;
@@ -19,26 +21,20 @@ const ProgressProsCons: React.FC<ProgressProsConsProps> = ({selectedItem}) => {
   useEffect(() => {
     const unsubscribePros = fetchProsRealtime(
       selectedItem.id,
-      (pros: ProCon[]) => {
-        const sumImportance = (items: ProCon[]) =>
+      (pros: ProsConsType[]) => {
+        const sumImportance = (items: ProsConsType[]) =>
           items.reduce((sum, item) => sum + item.importance, 0);
-        const prosSum = sumImportance(pros);
-        setProsSum(prosSum);
-        // console.log('Fetched Pros:', pros);
-        // console.log('Sum of Pros Importance:', prosSum);
+        setProsSum(sumImportance(pros));
       },
       () => {},
     );
 
     const unsubscribeCons = fetchConsRealtime(
       selectedItem.id,
-      (cons: ProCon[]) => {
-        const sumImportance = (items: ProCon[]) =>
+      (cons: ProsConsType[]) => {
+        const sumImportance = (items: ProsConsType[]) =>
           items.reduce((sum, item) => sum + item.importance, 0);
-        const consSum = sumImportance(cons);
-        setConsSum(consSum);
-        console.log('Fetched Cons:', cons);
-        console.log('Sum of Cons Importance:', consSum);
+        setConsSum(sumImportance(cons));
       },
       () => {},
     );
@@ -50,46 +46,62 @@ const ProgressProsCons: React.FC<ProgressProsConsProps> = ({selectedItem}) => {
   }, [selectedItem.id]);
 
   const total = prosSum + consSum;
-  const progress = total === 0 ? 0.5 : prosSum / total;
 
-  const width = 320;
-  const height = 50;
-
-  const filledPercentage = Math.round(progress * 100);
-  const emptyPercentage = 100 - filledPercentage;
-
-  const filledTextPosition = (progress * width) / 2;
-  const emptyTextPosition = width - ((emptyPercentage / 100) * width) / 2;
-
-  const prosTextOpacity = filledPercentage === 0 ? 0 : 1;
-  const consTextOpacity = emptyPercentage === 0 ? 0 : 1;
+  // Prepare data for the pie chart
+  const pieData = [
+    {
+      value: prosSum,
+      color: multiThemeColor().PROS_COLOR,
+    },
+    {
+      value: consSum,
+      color: multiThemeColor().CONS_COLOR,
+    },
+  ];
 
   return (
-    <View>
-      <View style={{width, height, alignSelf: 'center', position: 'relative'}}>
-        <Progress.Bar
-          progress={progress}
-          width={width}
-          height={height}
-          unfilledColor={multiThemeColor().PROS_COLOR}
-          color={multiThemeColor().CONS_COLOR}
-          borderWidth={0}
-        />
-        <Text
-          style={[
-            styles.progressText,
-            {left: filledTextPosition - 25, opacity: prosTextOpacity},
-          ]}>
-          +{`${filledPercentage}.0 %`}
-        </Text>
-        <Text
-          style={[
-            styles.progressText,
-            {left: emptyTextPosition - 25, opacity: consTextOpacity},
-          ]}>
-          -{`${emptyPercentage}.0 %`}
-        </Text>
-      </View>
+    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+      <Space height={10} />
+      <PieChart
+        data={pieData}
+        donut // For donut chart; remove if you want a regular pie chart
+        showText // Show percentage text
+        textColor="black"
+        textSize={16}
+        radius={100}
+        innerRadius={60} // Only for donut chart
+        centerLabelComponent={() => (
+          <View>
+            <Text style={styles.centerLabel}>Total</Text>
+            <Text style={styles.centerLabel}>{total}</Text>
+          </View>
+        )}
+      />
+      <Space height={20} />
+      <Row space={5}>
+        <Row space={2} style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              height: 20,
+              width: 20,
+              borderRadius: 100,
+              backgroundColor: multiThemeColor().PROS_COLOR,
+            }}
+          />
+          <Text>Cons</Text>
+        </Row>
+        <Row space={2} style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View
+            style={{
+              height: 20,
+              width: 20,
+              borderRadius: 100,
+              backgroundColor: multiThemeColor().CONS_COLOR,
+            }}
+          />
+          <Text>Pros</Text>
+        </Row>
+      </Row>
     </View>
   );
 };
@@ -97,12 +109,9 @@ const ProgressProsCons: React.FC<ProgressProsConsProps> = ({selectedItem}) => {
 export default ProgressProsCons;
 
 const styles = StyleSheet.create({
-  progressText: {
-    position: 'absolute',
-    top: '40%',
-    transform: [{translateY: -8}],
-    color: 'white',
-    fontWeight: 'bold',
+  centerLabel: {
+    textAlign: 'center',
     fontSize: 18,
+    fontWeight: 'bold',
   },
 });
